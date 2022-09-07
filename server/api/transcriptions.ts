@@ -1,11 +1,13 @@
 import { FreeBassTranscriptions } from "~/api_plugins/freeBassTranscriptions";
 import { BassLessons } from "~/api_plugins/bassLessons";
 import { TheBassment } from "~/api_plugins/theBassment";
+import { GrooveOfTheWeek } from "~/api_plugins/grooveOfTheWeek";
 
 let plugins = [
   FreeBassTranscriptions,
   BassLessons,
   TheBassment,
+  GrooveOfTheWeek,
 ];
 
 async function getTranscriptions() {
