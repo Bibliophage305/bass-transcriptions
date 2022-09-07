@@ -59,7 +59,7 @@ const headers = ref([
     </v-row>
     <v-row>
       <v-col>
-        <EasyDataTable :headers="headers" :items="transcriptions">
+        <EasyDataTable :headers="headers" :items="transcriptions" :loading="pending">
           <template #item-source_link="{ source, parent_url }">
             <a :href="parent_url" target="_blank">{{ source }}</a>
           </template>
