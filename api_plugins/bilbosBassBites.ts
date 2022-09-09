@@ -14,7 +14,7 @@ export class BilbosBassBites extends TranscriptionPlugin {
       .children("tbody")
       .children("tr")) {
       const [song_col, artist_col, bassist_col, download_col] = $(a).children();
-      if ($(song_col).text() === '') {
+      if ($(song_col).text() === "") {
         continue;
       }
       transcriptions.push({
