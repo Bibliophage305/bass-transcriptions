@@ -22,11 +22,7 @@ async function getTranscriptions() {
       return pluginInstance
         .fetchTranscriptions()
         .then((t) => transcriptions.push(...t))
-        .catch((err) => {
-          console.log("Error encountered");
-          console.log(err);
-          errors.push(err);
-        });
+        .catch(errors.push);
     })
   );
   transcriptions.sort((a, b) => a.artist.localeCompare(b.artist));
