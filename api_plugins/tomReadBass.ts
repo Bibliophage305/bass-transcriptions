@@ -36,14 +36,28 @@ export class TomReadBass extends TranscriptionPlugin {
   parseHTML(text: string): Transcription[] {
     let transcriptions: Transcription[] = [];
     const $ = cheerio.load(text);
-    for (const row of $("p.font_8", "main").children("span")) {
-      const artist_text = $(row).text().split(/(\s){3,}/);
+    for (const row of $("p.font_8", "main")) {
+      const song_link = $(row).find("a").first();
+      const artist_text = $(row)
+        .text()
+        .trim()
+        .split(/(\s){3,}/)
+        .filter((t) => t.replace(/\s+/, "") !== "");
+      if (!artist_text || !song_link) {
+        continue;
+      }
+      const song = $(song_link).text().trim();
+      const artist = artist_text[artist_text.length - 1].trim();
+      const url = $(song_link).attr("href");
+      if (!song || !artist || !url) {
+        continue;
+      }
       transcriptions.push({
-        song: $(row).find("span").first().find("a").first().text().trim(),
-        artist: artist_text[artist_text.length - 1].trim(),
+        song: song,
+        artist: artist,
         source: this.name,
         parent_url: this.page_url,
-        url: $(row).find("span").first().find("a").first().attr("href"),
+        url: url,
       });
     }
     return transcriptions;

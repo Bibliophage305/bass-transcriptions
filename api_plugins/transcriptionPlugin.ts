@@ -37,6 +37,8 @@ export abstract class TranscriptionPlugin {
           try {
             resolve(this.parseHTML(text));
           } catch (err) {
+            console.log(query_url);
+            console.log(text);
             reject(err);
           }
         })

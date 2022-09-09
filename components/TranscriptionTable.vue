@@ -1,8 +1,14 @@
 <script setup>
 import EasyDataTable from "vue3-easy-data-table";
 import "vue3-easy-data-table/dist/style.css";
-const { data: response, pending, refresh, error } = await useFetch("/api/transcriptions");
+const {
+  data: response,
+  pending,
+  refresh,
+  error,
+} = await useFetch("/api/transcriptions");
 const search = ref("");
+const errors = computed(() => response.value.errors);
 const transcriptions = computed(() => {
   if (search.value === "") {
     return response.value.transcriptions;
@@ -52,6 +58,13 @@ const headers = ref([
         <v-btn @click="refresh()">refetch</v-btn>
       </v-col>
     </v-row>
+    <v-row v-if="errors">
+      <v-col>
+        <v-row v-for="(index, error) of errors" :key="index">
+          <p>{{ error }}</p>
+        </v-row>
+      </v-col>
+    </v-row>
     <v-row>
       <v-col>
         <v-text-field v-model="search" />
@@ -59,7 +72,11 @@ const headers = ref([
     </v-row>
     <v-row>
       <v-col>
-        <EasyDataTable :headers="headers" :items="transcriptions" :loading="pending">
+        <EasyDataTable
+          :headers="headers"
+          :items="transcriptions"
+          :loading="pending"
+        >
           <template #item-source_link="{ source, parent_url }">
             <a :href="parent_url" target="_blank">{{ source }}</a>
           </template>

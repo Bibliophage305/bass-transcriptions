@@ -23,6 +23,7 @@ async function getTranscriptions() {
         .fetchTranscriptions()
         .then((t) => transcriptions.push(...t))
         .catch((err) => {
+          console.log("Error encountered");
           console.log(err);
           errors.push(err);
         });
