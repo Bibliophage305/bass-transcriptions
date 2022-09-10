@@ -1,5 +1,5 @@
 <script setup>
-import EasyDataTable from "vue3-easy-data-table";
+import { matSearch } from "@quasar/extras/material-icons";
 import "vue3-easy-data-table/dist/style.css";
 const {
   data: response,
@@ -8,12 +8,17 @@ const {
   error,
 } = await useFetch("/api/transcriptions");
 const search = ref("");
-const errors = computed(() => response.value.errors);
+const pagination = ref({
+  rowsPerPage: 0,
+});
+const errors = computed(() => {
+  return response?.value?.errors;
+});
 const transcriptions = computed(() => {
   if (search.value === "") {
-    return response.value.transcriptions;
+    return response?.value?.transcriptions;
   }
-  return response.value.transcriptions.filter((t) => {
+  return response?.value?.transcriptions.filter((t) => {
     const words = [
       ...t.artist
         .toLowerCase()
@@ -33,60 +38,75 @@ const transcriptions = computed(() => {
 });
 const headers = ref([
   {
-    text: "Artist",
-    value: "artist",
+    name: "artist",
+    label: "Artist",
+    field: "artist",
   },
   {
-    text: "Song",
-    value: "song",
+    name: "song",
+    label: "Song",
+    field: "song",
   },
   {
-    text: "Source",
-    value: "source_link",
+    name: "source_link",
+    label: "Source",
+    field: "source",
   },
   {
-    text: "Download",
-    value: "download",
+    name: "download",
+    label: "Download",
+    field: "download",
   },
 ]);
 </script>
 
 <template>
-  <v-container>
-    <v-row>
-      <v-col>
-        <v-btn @click="refresh()">refetch</v-btn>
-      </v-col>
-    </v-row>
-    <v-row v-if="errors">
-      <v-col>
-        <v-row v-for="(index, error) of errors" :key="index">
-          <p>{{ error }}</p>
-        </v-row>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col>
-        <v-text-field v-model="search" />
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col>
-        <EasyDataTable
-          :headers="headers"
-          :items="transcriptions"
-          :loading="pending"
-        >
-          <template #item-source_link="{ source, parent_url }">
-            <a :href="parent_url" target="_blank">{{ source }}</a>
-          </template>
-          <template #item-download="{ url }">
-            <v-btn text icon :href="url" target="_blank">
+  <div class="row">
+    <div class="row" v-if="errors">
+      <div class="col">
+        <p v-for="(index, error) of errors" :key="index">
+          {{ error }}
+        </p>
+      </div>
+    </div>
+    <div class="col">
+      <q-table
+        title="Transcriptions"
+        :rows="transcriptions"
+        :columns="headers"
+        virtual-scroll
+        v-model:pagination="pagination"
+        :rows-per-page-options="[0]"
+        :loading="pending"
+      >
+        <template v-slot:top-right>
+          <q-input
+            borderless
+            dense
+            debounce="300"
+            v-model="search"
+            placeholder="Search"
+          >
+            <template v-slot:append>
+              <q-icon :name="matSearch" />
+            </template>
+          </q-input>
+        </template>
+      </q-table>
+      <!-- <EasyDataTable
+        :headers="headers"
+        :items="transcriptions"
+        :loading="pending"
+      >
+        <template #item-source_link="{ source, parent_url }">
+          <a :href="parent_url" target="_blank">{{ source }}</a>
+        </template>
+        <template #item-download="{ url }">
+          <v-btn text icon :href="url" target="_blank">
               <v-icon>mdi-download</v-icon>
             </v-btn>
-          </template>
-        </EasyDataTable>
-      </v-col>
-    </v-row>
-  </v-container>
+        </template>
+      </EasyDataTable> -->
+    </div>
+  </div>
 </template>

@@ -1,9 +1,15 @@
 <template>
-  <v-app>
-    <v-app-bar app color="primary" dark> </v-app-bar>
+  <q-layout>
+    <q-header elevated>
+      <q-toolbar>
+        <q-toolbar-title> Bass Transcription Finder </q-toolbar-title>
+      </q-toolbar>
+    </q-header>
 
-    <v-main>
-      <transcription-table />
-    </v-main>
-  </v-app>
+    <q-page-container>
+      <q-page padding>
+        <transcription-table />
+      </q-page>
+    </q-page-container>
+  </q-layout>
 </template>
