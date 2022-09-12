@@ -1,6 +1,6 @@
 <script setup>
-import { matSearch } from "@quasar/extras/material-icons";
-import "vue3-easy-data-table/dist/style.css";
+import { matSearch } from "@quasar/extras/material-icons/index.js";
+import { matDownload } from "@quasar/extras/material-icons/index.js";
 const {
   data: response,
   pending,
@@ -50,7 +50,7 @@ const headers = ref([
   {
     name: "source_link",
     label: "Source",
-    field: "source",
+    field: "source_link",
   },
   {
     name: "download",
@@ -92,21 +92,25 @@ const headers = ref([
             </template>
           </q-input>
         </template>
+        <template v-slot:body-cell-source_link="props">
+          <q-td :props="props">
+            <a :href="props.row.parent_url" target="_blank">
+              {{ props.row.source }}
+            </a>
+          </q-td>
+        </template>
+        <template v-slot:body-cell-download="props">
+          <q-td :props="props">
+            <q-btn
+              round
+              color="primary"
+              :icon="matDownload"
+              :href="props.row.url"
+              target="_blank"
+            />
+          </q-td>
+        </template>
       </q-table>
-      <!-- <EasyDataTable
-        :headers="headers"
-        :items="transcriptions"
-        :loading="pending"
-      >
-        <template #item-source_link="{ source, parent_url }">
-          <a :href="parent_url" target="_blank">{{ source }}</a>
-        </template>
-        <template #item-download="{ url }">
-          <v-btn text icon :href="url" target="_blank">
-              <v-icon>mdi-download</v-icon>
-            </v-btn>
-        </template>
-      </EasyDataTable> -->
     </div>
   </div>
 </template>
